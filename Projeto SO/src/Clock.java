@@ -1,10 +1,11 @@
 
 public class Clock extends Thread {
 
-	long tempoVirtual;
+	private long tempoVirtual;
+	private SistemaOperacional listener;
 	
 	public Clock() {
-		this.tempoVirtual = 1000l;
+		this.tempoVirtual = 0l;
 	}
 	
 	public void run() {
@@ -14,18 +15,14 @@ public class Clock extends Thread {
 			try {
 				
 				sleep(1000);
-				if(this.tempoVirtual <= 9999l) {
-					this.tempoVirtual++;
-				}else {
-					this.tempoVirtual = 1000l;
-				}
+				this.tempoVirtual++;
+				listener.notificar();
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
 	
 	public long getTempo() {
 		return this.tempoVirtual;

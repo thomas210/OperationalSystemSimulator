@@ -1,14 +1,19 @@
+import java.util.ArrayList;
 
-public class SistemaOperacional {
+public class SistemaOperacional implements ClockListener {
 	
+	private DiscoRigido hd;
 	private MemoriaVirtual memVirtual;
-	private MemoriaPrincipal ram;
+	private MemoriaPrincipal memRam;
 	private Clock clock = new Clock();
+	private WorkingSet ws;
 	
 	public SistemaOperacional() {
+		this.hd = new DiscoRigido(10);
 		this.memVirtual = new MemoriaVirtual(10);
-		this.ram = new MemoriaPrincipal(5);
+		this.memRam = new MemoriaPrincipal(5);
 		this.clock.start();
+		this.ws = new WorkingSet(5);
 	}
 	
 	
@@ -27,6 +32,11 @@ public class SistemaOperacional {
 		}
 	}
 	
+	
+	
+	
+	
+	
 	public void escreva(int endereco, int valor) {
 		int enderecoFisico = 0;
 		if (this.memVirtual.isReal(endereco)) {
@@ -36,17 +46,17 @@ public class SistemaOperacional {
 				//PEGA DO HD
 			}
 		}else {
-			enderecoFisico = this.ram.getPosicaoLivre();
+			enderecoFisico = this.memRam.getPosicaoLivre();
 			//ENQUANTO NAO TIVER LIVRE PROCURE
 			this.memVirtual.criarPagina(endereco, enderecoFisico, this.clock.getTempo());
 		}
-		this.ram.setValor(enderecoFisico, valor);
+		this.memRam.setValor(enderecoFisico, valor);
 	}
 	
 	/*
 	 * LE NA VIRTUAL, PEGA ENDERECO, SE TIVER
-	 * LE/ALTERA/ESCREVE NA RAM NO ENDERECO, CASO O ENDERECO -1, A RAM PROCURA LUGAR LIVRE
-	 * IF GETEREW == -1{ RAM.GETLIVRE
+	 * LE/ALTERA/ESCREVE NA memRam NO ENDERECO, CASO O ENDERECO -1, A memRam PROCURA LUGAR LIVRE
+	 * IF GETEREW == -1{ memRam.GETLIVRE
 	 * CRIAR PAGINA(ENDERECO VIRTUAL, ENDERECO FISICO
 	 * 
 	 * */
@@ -57,11 +67,28 @@ public class SistemaOperacional {
 		}
 		if (this.memVirtual.getEstadoPagina(endereco)) {
 			int enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
-			int valor = this.ram.getValor(enderecoFisico);
+			int valor = this.memRam.getValor(enderecoFisico);
 			System.out.println(valor);
 		}else {
 			//PEGA NO HD
 		}
 	}
+	
+	public void vaiSafadao() {
+		
+		int endereco = ws.exec(memVirtual, this.clock.getTempo());
+		int valor = this.memRam.getValor(memVirtual.getEnderecoFisico(endereco));
+		this.hd.setDiscoRigido(endereco, valor);
+		this.memVirtual.setEstadoPagina(endereco,false);
+	}
+
+
+	@Override  //Listener
+	public void notificar() {
+		this.memVirtual.zerarReferencia();	
+	}
+	
+	
+	
 	
 }

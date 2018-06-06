@@ -33,6 +33,10 @@ public class MemoriaVirtual {
 		return this.memoriaVirtual.get(endereco).isEstado();
 	}
 	
+	public void setEstadoPagina(int endereco, boolean estado) {
+		this.memoriaVirtual.get(endereco).setEstado(estado);
+	}
+	
 	public boolean isReal(int endereco) {
 		boolean res = false;
 		if (this.memoriaVirtual.get(endereco) != null) {
@@ -40,6 +44,32 @@ public class MemoriaVirtual {
 		}
 		return res;
 	}
+	
+	
+	/***********************************************************/
+	public boolean getReferencia(int endereco) {
+		return this.memoriaVirtual.get(endereco).getReferencia();
+	}
+	
+	public long getUltimaReferencia (int endereco) {
+		return this.memoriaVirtual.get(endereco).getUltimaReferencia();
+	}
+	
+	public void setUltimaReferencia (int endereco, long valor) {
+		this.memoriaVirtual.get(endereco).setUltimaReferencia(valor);
+	}
+	/*************************************************************/
+	
+	public int getTamanho() {
+		return memoriaVirtual.size();
+	}
+	
+	public void zerarReferencia() {
+		for(int i = 0; i < this.getTamanho(); ++i) {
+			this.memoriaVirtual.get(i).isReferencia(false);
+		}
+	}
+	
 	
 	
 

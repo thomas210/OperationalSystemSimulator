@@ -13,5 +13,6 @@ public class Main {
 		so.tratamento("8-W-15");
 		so.tratamento("5-R");
 		so.tratamento("8-R");
+		
 	}
 }

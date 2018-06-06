@@ -1,30 +1,41 @@
 
 
 public class WorkingSet{
-	long t;
+	long limite;
 	
-	public WorkingSet(long tempo) {
-		this.t = tempo;
+	public WorkingSet(long limite) {
+		this.limite = limite;
 	}
 	
-	public void ws(long tempoVirtual) {
-		
-		for(Pagina pag : memRam.getPaginas()) {
+	public int exec(MemoriaVirtual memVirtual, long tClock) {
+		int endereco = 0;
+		long menorIdade = 0;
+		long idade = 0;
+		for (int i = 0; i < memVirtual.getTamanho(); i++) {
 			
-			boolean ref = pag.getReferencia();
-			long idade = (tempoVirtual - pag.getUltimaReferencia());
+			idade = calcIdade(tClock, memVirtual.getUltimaReferencia(i));
 			
-			if(ref == true) {
-				pag.setUltimaReferencia(tempoVirtual);
-				
-			}else if((ref == false) && (idade > t)) {
-				//colocar no HD
-				//Tirar da memoriaRam
-			}else if((ref == false) && (idade <= t)) {
-				//Lembrar da maior idade e remove-la no final
+			if (memVirtual.getEstadoPagina(i)) {
+				if (memVirtual.getReferencia(i) == true) {
+					memVirtual.setUltimaReferencia(i,tClock);
+					
+				}else if((memVirtual.getReferencia(i) == false) && (idade > this.limite )) {
+					endereco = i;
+					break;
+				}else if((memVirtual.getReferencia(i) == false) && (idade <= this.limite )) {
+					if(idade > menorIdade) {
+						endereco = i;
+						menorIdade = idade;
+					}
+				}
 			}
 		}
+		
+		return endereco;
 	}
 	
+	public long calcIdade(long tClock, long tPagina) {
+		return (tClock - tPagina);
+	}
 	
 }
