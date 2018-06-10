@@ -2,10 +2,12 @@
 public class Clock extends Thread {
 
 	private long tempoVirtual;
-	private SistemaOperacional listener;
+	private ListenerClock listener;
 	
-	public Clock() {
+	
+	public Clock(ListenerClock listener) {
 		this.tempoVirtual = 0l;
+		this.listener = listener;
 	}
 	
 	public void run() {
@@ -14,9 +16,9 @@ public class Clock extends Thread {
 			
 			try {
 				
-				sleep(1000);
+				sleep(10);
 				this.tempoVirtual++;
-				listener.notificar();
+				listener.notificar(tempoVirtual);
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();

@@ -7,7 +7,8 @@ public class WorkingSet{
 		this.limite = limite;
 	}
 	
-	public int exec(MemoriaVirtual memVirtual, long tClock) {
+	public int exec(MemoriaVirtual memVirtual) {
+		long tClock = memVirtual.getTempoAtualDeClock();
 		int endereco = 0;
 		long menorIdade = 0;
 		long idade = 0;

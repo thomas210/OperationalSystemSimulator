@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class MemoriaVirtual {
 	
 	ArrayList<Pagina> memoriaVirtual;
+	long TempoAtualDeClock = 0l;
 	
 	public MemoriaVirtual(int tamanho) {
 		this.memoriaVirtual = new ArrayList<Pagina>();
@@ -24,8 +25,8 @@ public class MemoriaVirtual {
 	}
 	
 	
-	public void criarPagina (int enderecoVirtual, int enderecoFisico, long tempo) {
-		Pagina dados = new Pagina(true, enderecoFisico, tempo);
+	public void criarPagina (int enderecoVirtual, int enderecoFisico) {
+		Pagina dados = new Pagina(true, enderecoFisico, TempoAtualDeClock);
 		this.memoriaVirtual.add(enderecoVirtual, dados);
 	}
 	
@@ -64,9 +65,19 @@ public class MemoriaVirtual {
 		return memoriaVirtual.size();
 	}
 	
+	public void setTempoAtualDeClock(long clock) {
+		this.TempoAtualDeClock = clock;
+	}
+	
+	public long getTempoAtualDeClock() {
+		return this.TempoAtualDeClock;
+	}
+	
 	public void zerarReferencia() {
 		for(int i = 0; i < this.getTamanho(); ++i) {
-			this.memoriaVirtual.get(i).isReferencia(false);
+			if (isReal(i)) {
+				this.memoriaVirtual.get(i).isReferencia(false);
+			}
 		}
 	}
 	

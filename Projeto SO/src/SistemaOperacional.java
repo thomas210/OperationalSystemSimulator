@@ -1,18 +1,19 @@
 import java.util.ArrayList;
 
-public class SistemaOperacional implements ClockListener {
+public class SistemaOperacional {
 	
 	private DiscoRigido hd;
 	private MemoriaVirtual memVirtual;
 	private MemoriaPrincipal memRam;
-	private Clock clock = new Clock();
+	private ListenerClock listener;
 	private WorkingSet ws;
 	
 	public SistemaOperacional() {
 		this.hd = new DiscoRigido(10);
 		this.memVirtual = new MemoriaVirtual(10);
 		this.memRam = new MemoriaPrincipal(5);
-		this.clock.start();
+		this.listener = new ListenerClock(memVirtual);
+		new Clock(listener).start();
 		this.ws = new WorkingSet(5);
 	}
 	
@@ -31,24 +32,17 @@ public class SistemaOperacional implements ClockListener {
 			System.out.println("Invalido");
 		}
 	}
-	
-	
-	
-	
-	
+		
 	
 	public void escreva(int endereco, int valor) {
 		int enderecoFisico = 0;
 		if (this.memVirtual.isReal(endereco)) {
 			if (this.memVirtual.getEstadoPagina(endereco)) {
 				enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
-			}else {
-				//PEGA DO HD
 			}
 		}else {
-			enderecoFisico = this.memRam.getPosicaoLivre();
-			//ENQUANTO NAO TIVER LIVRE PROCURE
-			this.memVirtual.criarPagina(endereco, enderecoFisico, this.clock.getTempo());
+			enderecoFisico = this.memRam.getPosicaoLivre(); //ENQUANTO NAO TIVER LIVRE PROCURE
+			this.memVirtual.criarPagina(endereco, enderecoFisico);
 		}
 		this.memRam.setValor(enderecoFisico, valor);
 	}
@@ -70,25 +64,25 @@ public class SistemaOperacional implements ClockListener {
 			int valor = this.memRam.getValor(enderecoFisico);
 			System.out.println(valor);
 		}else {
-			//PEGA NO HD
+			this.PegarDoHD(endereco);
+			this.ler(endereco);
 		}
 	}
 	
 	public void vaiSafadao() {
 		
-		int endereco = ws.exec(memVirtual, this.clock.getTempo());
+		int endereco = ws.exec(memVirtual);
 		int valor = this.memRam.getValor(memVirtual.getEnderecoFisico(endereco));
 		this.hd.setDiscoRigido(endereco, valor);
 		this.memVirtual.setEstadoPagina(endereco,false);
 	}
-
-
-	@Override  //Listener
-	public void notificar() {
-		this.memVirtual.zerarReferencia();	
+	
+	public void PegarDoHD(int endereco) {
+		int valorDoHD = this.hd.getDiscoRigido(endereco);
+		int enderecoFisico = this.memRam.getPosicaoLivre();
+		this.memVirtual.criarPagina(endereco, enderecoFisico);
 	}
-	
-	
+
 	
 	
 }
