@@ -1,3 +1,4 @@
+package memoria;
 import java.util.ArrayList;
 
 public class MemoriaVirtual {
@@ -26,8 +27,8 @@ public class MemoriaVirtual {
 	
 	
 	public void criarPagina (int enderecoVirtual, int enderecoFisico) {
-		Pagina dados = new Pagina(true, enderecoFisico, TempoAtualDeClock);
-		this.memoriaVirtual.add(enderecoVirtual, dados);
+		Pagina pagina = new Pagina(true, enderecoFisico, this.TempoAtualDeClock);
+		this.memoriaVirtual.set(enderecoVirtual, pagina);
 	}
 	
 	public boolean getEstadoPagina(int endereco) {
@@ -46,7 +47,11 @@ public class MemoriaVirtual {
 		return res;
 	}
 	
-	
+	public void EnderecoReferenciado(int endereco) {
+		this.memoriaVirtual.get(endereco).setUltimaReferencia(this.TempoAtualDeClock);
+		this.memoriaVirtual.get(endereco).isReferencia(true);
+		
+	}
 	/***********************************************************/
 	public boolean getReferencia(int endereco) {
 		return this.memoriaVirtual.get(endereco).getReferencia();

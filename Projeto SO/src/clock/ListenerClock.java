@@ -1,3 +1,5 @@
+package clock;
+import memoria.MemoriaVirtual;
 
 public class ListenerClock implements InterfaceClock {
 	
@@ -8,6 +10,7 @@ public class ListenerClock implements InterfaceClock {
 	}
 
 	public void notificar(long tempoDeClock) {
+		System.out.println("\n");
 		memVirtual.setTempoAtualDeClock(tempoDeClock);
 		memVirtual.zerarReferencia();
 	}

@@ -1,3 +1,4 @@
+package clock;
 
 public class Clock extends Thread {
 
@@ -16,7 +17,7 @@ public class Clock extends Thread {
 			
 			try {
 				
-				sleep(10);
+				sleep(500);
 				this.tempoVirtual++;
 				listener.notificar(tempoVirtual);
 				

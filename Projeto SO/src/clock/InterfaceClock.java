@@ -1,3 +1,4 @@
+package clock;
 
 public interface InterfaceClock {
 

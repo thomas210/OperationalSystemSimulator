@@ -1,3 +1,4 @@
+package memoria;
 import java.util.ArrayList;
 
 public class MemoriaPrincipal {
@@ -17,7 +18,7 @@ public class MemoriaPrincipal {
 	}
 	
 	public void setValor (int endereco, int valor) {
-		this.memoriaPrincipal.add(endereco, valor);
+		this.memoriaPrincipal.set(endereco, valor);
 	}
 	
 	public int getPosicaoLivre() {
@@ -27,5 +28,9 @@ public class MemoriaPrincipal {
 			}
 		}
 		return -1;
+	}
+	
+	public void setNull(int endereco) {
+		this.memoriaPrincipal.set(endereco, null);
 	}
 }
