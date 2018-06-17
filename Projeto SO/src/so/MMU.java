@@ -25,7 +25,7 @@ public class MMU {
 	
 	
 	
-	public void escreva(int endereco, int valor) {
+	public synchronized void escreva(int endereco, int valor) {
 		int enderecoFisico = 0;
 		if (this.memVirtual.isReal(endereco)) {
 			if (this.memVirtual.getEstadoPagina(endereco)) {
