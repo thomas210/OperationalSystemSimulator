@@ -4,6 +4,7 @@ import so.MMU;
 
 public class Processo extends Thread{
 	
+	private static final int TIMESLEEP = 1000;
 	private static MMU mmu;
 	private String instrucoes;
 	
@@ -18,7 +19,7 @@ public class Processo extends Thread{
 		for(String var : this.instrucoes.split(",")) {
 			
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(TIMESLEEP);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -38,7 +39,7 @@ public class Processo extends Thread{
 		}else if(entrada.charAt(2) == 'W') {
 			mmu.escreva(Integer.parseInt(entrada.substring(0, 1)), Integer.parseInt(entrada.substring(4)));
 		}else {
-			System.out.println("Invalido");
+			System.out.println("Invalido | " + entrada);
 		}
 	}
 }

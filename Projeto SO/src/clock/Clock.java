@@ -1,7 +1,8 @@
 package clock;
 
 public class Clock extends Thread {
-
+	
+	private static final int TIMESLEEP = 1000;
 	private long tempoVirtual;
 	private ListenerClock listener;
 	
@@ -17,7 +18,7 @@ public class Clock extends Thread {
 			
 			try {
 				
-				sleep(500);
+				sleep(TIMESLEEP);
 				this.tempoVirtual++;
 				listener.notificar(tempoVirtual);
 				

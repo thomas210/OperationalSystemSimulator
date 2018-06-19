@@ -2,6 +2,8 @@ package so;
 import memoria.MemoriaVirtual;
 
 public class WorkingSet{
+	
+	private static final int TIMESLEEP = 500;
 	long limite;
 	
 	public WorkingSet(long limite) {
@@ -11,7 +13,7 @@ public class WorkingSet{
 	public int exec(MemoriaVirtual memVirtual) {
 		System.out.println("WORKING SET");
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(TIMESLEEP);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

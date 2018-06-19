@@ -13,11 +13,11 @@ public class MMU {
 	private ListenerClock listener;
 	private WorkingSet ws;
 	
-	public MMU() {
-		this.hd = new DiscoRigido(10);
-		this.memVirtual = new MemoriaVirtual(10);
-		this.memRam = new MemoriaPrincipal(5);
-		this.ws = new WorkingSet(2);
+	public MMU(int _disco, int _memoriaVirtual, int _memoriaPrincipal, int _limiteWorkingSet) {
+		this.hd = new DiscoRigido(_disco);
+		this.memVirtual = new MemoriaVirtual(_memoriaVirtual);
+		this.memRam = new MemoriaPrincipal(_memoriaPrincipal);
+		this.ws = new WorkingSet(_limiteWorkingSet);
 		this.listener = new ListenerClock(memVirtual);
 		new Clock(listener).start();
 
@@ -30,37 +30,44 @@ public class MMU {
 		if (this.memVirtual.isReal(endereco)) {
 			if (this.memVirtual.getEstadoPagina(endereco)) {
 				enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
+				this.memVirtual.EnderecoReferenciado(endereco);
 			}else {
-				this.PegarDoHD(endereco);
-				this.escreva(endereco, valor);
+				enderecoFisico = this.PegarDoHD(endereco);
+				//this.escreva(endereco, valor);
 			}
 		}else {
 			enderecoFisico = this.getEnderecoFisico(); 
 			this.memVirtual.criarPagina(endereco, enderecoFisico);
 		}
 		this.memRam.setValor(enderecoFisico, valor);
-		System.out.println("ESCREVER" + endereco + " = " + valor);
+		System.out.println("Write " + endereco + " = " + valor);
 	}
 	
 
 	
 	public void ler(int endereco) throws Exception{
+		int enderecoFisico = -1;
+		int valor = -1;
+		
 		if (!this.memVirtual.isReal(endereco)) {
-			throw new Exception("Acesso Inválido");
+			throw new Exception("Acesso Inválido de leitura");
 		}
 		if (this.memVirtual.getEstadoPagina(endereco)) {
-			int enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
+			enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
 			this.memVirtual.EnderecoReferenciado(endereco);
-			int valor = this.memRam.getValor(enderecoFisico);
-			System.out.println("LER " + endereco + " = " + valor);
+			valor = this.memRam.getValor(enderecoFisico);
 		}else {
-			this.PegarDoHD(endereco);
-			this.ler(endereco);
+			enderecoFisico = this.PegarDoHD(endereco);
+			this.memVirtual.EnderecoReferenciado(endereco);
+			valor = this.memRam.getValor(enderecoFisico);
+			//this.ler(endereco);
 		}
+		
+		System.out.println("Read " + endereco + " = " + valor);
 	}
 	
 	
-	public int getEnderecoFisico() {
+	public synchronized int getEnderecoFisico() {
 		int endereco = -1;
 			while(true) {
 				endereco = this.memRam.getPosicaoLivre();
@@ -70,7 +77,7 @@ public class MMU {
 					break;
 				}
 			}
-		System.out.println("GET END RAM " + endereco);
+		System.out.println("GET NEW ADDRESS RAM " + endereco);
 		return endereco;
 	}
 	
@@ -78,18 +85,20 @@ public class MMU {
 	public void vaiSafadao() {
 		
 		int endereco = ws.exec(memVirtual);
-		int valor = this.memRam.getValor(memVirtual.getEnderecoFisico(endereco));
+		int enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
+		int valor = this.memRam.getValor(enderecoFisico);
 		this.hd.setDiscoRigido(endereco, valor);
 		this.memVirtual.setEstadoPagina(endereco,false);
-		this.memRam.setNull(endereco);
+		this.memRam.setNull(enderecoFisico);
 	}
 	
 	
-	public void PegarDoHD(int endereco) {
+	public int PegarDoHD(int endereco) {
 		int valorDoHD = this.hd.getDiscoRigido(endereco);
 		int enderecoFisico = this.getEnderecoFisico();
 		this.memVirtual.criarPagina(endereco, enderecoFisico);
 		this.memRam.setValor(enderecoFisico, valorDoHD);
+		return enderecoFisico;
 	}
 
 	
