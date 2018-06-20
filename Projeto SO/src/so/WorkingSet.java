@@ -21,11 +21,11 @@ public class WorkingSet{
 		int endereco = -1;
 		long menorIdade = 0;
 		long idade = 0;
-		for (int i = 0; i < memVirtual.getTamanho(); i++) {
+		for (int i = 0; i < memVirtual.getTamanho(); i++) { //PERCORRA TODA MEMORIA VIRTUAL
 			
-			if(memVirtual.isReal(i)) { //As paginas que existem
+			if(memVirtual.isReal(i)) { //AS PAGINAS EXISTEM?
 			
-				if (memVirtual.getEstadoPagina(i)) { //Os que estão na Memoria Ram
+				if (memVirtual.getEstadoPagina(i)) { //APENAS OS QUE ESTÃO NA MEMORIA RAM
 					
 					idade = calcIdade(tClock, memVirtual.getUltimaReferencia(i));
 					

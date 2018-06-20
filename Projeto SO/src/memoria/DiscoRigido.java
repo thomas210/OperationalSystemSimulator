@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class DiscoRigido {
 
-	ArrayList<Integer> discoRigido;
+	private ArrayList<Integer> discoRigido; //ARRAY DE INTEIROS
 
 	public DiscoRigido(int tamanho) {
 		this.discoRigido = new ArrayList<Integer>();

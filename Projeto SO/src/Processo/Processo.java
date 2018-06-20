@@ -28,7 +28,7 @@ public class Processo extends Thread{
 			
 		}
 	}
-	
+
 	public static void sendMMU(String entrada) {
 		if (entrada.charAt(2) == 'R') {
 			try{

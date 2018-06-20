@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class MemoriaPrincipal {
 
-	ArrayList<Integer> memoriaPrincipal;
+	private ArrayList<Integer> memoriaPrincipal; //ARRAY DE INTEIROS
 	
 	
 	public MemoriaPrincipal(int tamanho) {
@@ -13,6 +13,7 @@ public class MemoriaPrincipal {
 		}
 	}
 	
+	
 	public int getValor (int endereco) {
 		return this.memoriaPrincipal.get(endereco);
 	}
@@ -21,16 +22,18 @@ public class MemoriaPrincipal {
 		this.memoriaPrincipal.set(endereco, valor);
 	}
 	
+	
+	
 	public int getPosicaoLivre() {
-		for (int i = 0; i < this.memoriaPrincipal.size(); i++) {
-			if (this.memoriaPrincipal.get(i) == null) {
+		for (int i = 0; i < this.memoriaPrincipal.size(); i++) { //PERCORRER TODA MEMORIA
+			if (this.memoriaPrincipal.get(i) == null) {          //TESTAR SE ESTÁ LIVRE
 				return i;
 			}
 		}
-		return -1;
+		return -1;												//CASO CONTRÁRIO RETURN -1
 	}
 	
-	public void setNull(int endereco) {
+	public void setNull(int endereco) { //SET NULL
 		this.memoriaPrincipal.set(endereco, null);
 	}
 }

@@ -27,15 +27,14 @@ public class MMU {
 	
 	public synchronized void escreva(int endereco, int valor) {
 		int enderecoFisico = 0;
-		if (this.memVirtual.isReal(endereco)) {
-			if (this.memVirtual.getEstadoPagina(endereco)) {
+		if (this.memVirtual.isReal(endereco)) { //EXISTE UMA PAGINA?
+			if (this.memVirtual.getEstadoPagina(endereco)) { //TÁ NA MEMORIA RAM?
 				enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
 				this.memVirtual.EnderecoReferenciado(endereco);
-			}else {
-				enderecoFisico = this.PegarDoHD(endereco);
-				//this.escreva(endereco, valor);
+			}else {											//TÁ NO HD!
+				enderecoFisico = this.transHDtoMEM(endereco);
 			}
-		}else {
+		}else {									//SE NÃO EXISTE, CRIE!
 			enderecoFisico = this.getEnderecoFisico(); 
 			this.memVirtual.criarPagina(endereco, enderecoFisico);
 		}
@@ -49,18 +48,17 @@ public class MMU {
 		int enderecoFisico = -1;
 		int valor = -1;
 		
-		if (!this.memVirtual.isReal(endereco)) {
+		if (!this.memVirtual.isReal(endereco)) { //EXISTE ESSA PAGINA?
 			throw new Exception("Acesso Inválido de leitura");
 		}
-		if (this.memVirtual.getEstadoPagina(endereco)) {
+		if (this.memVirtual.getEstadoPagina(endereco)) { //OBTENHO A PAGINA SE ELA TÁ NA MEMORIA RAM
 			enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
 			this.memVirtual.EnderecoReferenciado(endereco);
 			valor = this.memRam.getValor(enderecoFisico);
-		}else {
-			enderecoFisico = this.PegarDoHD(endereco);
+		}else {											//TÁ NO HD
+			enderecoFisico = this.transHDtoMEM(endereco);
 			this.memVirtual.EnderecoReferenciado(endereco);
 			valor = this.memRam.getValor(enderecoFisico);
-			//this.ler(endereco);
 		}
 		
 		System.out.println("Read " + endereco + " = " + valor);
@@ -70,9 +68,9 @@ public class MMU {
 	public synchronized int getEnderecoFisico() {
 		int endereco = -1;
 			while(true) {
-				endereco = this.memRam.getPosicaoLivre();
+				endereco = this.memRam.getPosicaoLivre(); //SE NÃO TIVER ESPAÇO -> RETURN -1
 				if(endereco == -1) {
-					this.vaiSafadao();
+					this.algoritmoWS(); //WORKING SET
 				}else {
 					break;
 				}
@@ -82,18 +80,19 @@ public class MMU {
 	}
 	
 	
-	public void vaiSafadao() {
+	public void algoritmoWS() {
 		
-		int endereco = ws.exec(memVirtual);
+		int endereco = ws.exec(memVirtual);					 //CHAMA O ALGORITMO
 		int enderecoFisico = this.memVirtual.getEnderecoFisico(endereco);
 		int valor = this.memRam.getValor(enderecoFisico);
-		this.hd.setDiscoRigido(endereco, valor);
+		this.hd.setDiscoRigido(endereco, valor); 			//GRAVA EM DISCO
 		this.memVirtual.setEstadoPagina(endereco,false);
-		this.memRam.setNull(enderecoFisico);
+		this.memRam.setNull(enderecoFisico);				//LIBERA MEMORIA RAM
 	}
 	
 	
-	public int PegarDoHD(int endereco) {
+	public int transHDtoMEM(int endereco) { //TRANSFERE DO HD PARA AS MEMORIAS
+		System.out.println("HD TO MEMORY TRANSFER");
 		int valorDoHD = this.hd.getDiscoRigido(endereco);
 		int enderecoFisico = this.getEnderecoFisico();
 		this.memVirtual.criarPagina(endereco, enderecoFisico);

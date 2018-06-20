@@ -2,10 +2,10 @@ package memoria;
 
 public class Pagina {
 
-	private boolean estado;
-	private int enderecoFisico;
-	private boolean referencia;
-	private long ultimaReferencia;
+	private boolean estado;  	  //IF TRUE -> MEMORIA RAM  | ELSE -> HD
+	private int enderecoFisico;   //ENDEREÇO DA MEMORIA RAM
+	private boolean referencia;   //SE FOI UTILIZADA
+	private long ultimaReferencia;//TEMPO DO CLOCK PARA CALCULAR A IDADE
 
 	
 	public Pagina(boolean estado,int enderecoFisico, long ultimaReferencia) {
@@ -16,14 +16,16 @@ public class Pagina {
 		this.ultimaReferencia = ultimaReferencia;
 	}
 
+	
 	public boolean isEstado() {
 		return estado;
 	}
-
+	
 	public void setEstado(boolean estado) {
 		this.estado = estado;
 	}
 
+	
 	public int getEnderecoFisico() {
 		return enderecoFisico;
 	}
@@ -32,6 +34,7 @@ public class Pagina {
 		this.enderecoFisico = enderecoFisico;
 	}
 
+	
 	public boolean getReferencia() {
 		return referencia;
 	}
@@ -40,6 +43,7 @@ public class Pagina {
 		this.referencia = referencia;
 	}
 
+	
 	public long getUltimaReferencia() {
 		return ultimaReferencia;
 	}
